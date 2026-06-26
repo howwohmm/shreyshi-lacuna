@@ -13,7 +13,9 @@ cd "$(dirname "$0")"
 # run is pure double-click. (Optional: if a vercel token is ever pasted below, it
 # skips even those first-run steps — but it works perfectly fine left empty.)
 VERCEL_TOKEN=""
-VERCEL_PROJECT="shreyshithapliyal"
+VERCEL_PROJECT="shreyshi"
+VERCEL_SCOPE="shreyshithapliyalst-8178s-projects"
+VERCEL_PROJECT_ID="prj_DZhgPH9ZhE0rh9xhU6lat9LzgUOB"
 
 GOLD='\033[38;5;179m'; ROSE='\033[38;5;211m'; DIM='\033[2m'; B='\033[1m'; R='\033[0m'
 say() { printf "${GOLD}%s${R}\n" "$1"; }
@@ -69,9 +71,9 @@ echo ""
 if [ -n "$VERCEL_TOKEN" ]; then
   # ── fully automatic: token baked in by ohm, no prompts for her ──
   say "→ putting your site live… (no clicks needed, ~1 min)"
-  npx --yes vercel@latest link --yes --project "$VERCEL_PROJECT" --token "$VERCEL_TOKEN" >/dev/null 2>&1 \
+  npx --yes vercel@latest link --yes --project "$VERCEL_PROJECT" --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN" >/dev/null 2>&1 \
     || die "couldn't connect to vercel (the access key may be wrong or expired — tell ohm)."
-  npx --yes vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN" 2>&1 | tail -4 \
+  npx --yes vercel@latest deploy --prod --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN" 2>&1 | tail -4 \
     || die "the deploy didn't finish."
 else
   # ── fallback (ohm didn't bake a token): one-time vercel login + link ──
