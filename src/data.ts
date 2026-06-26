@@ -67,28 +67,29 @@ export const lacunaMeta = {
   song: "longing",
 };
 
-// each artwork links to its instagram post. only 2 are confidently matched to an
-// exact post (blue-portrait + dragon, verified by image + caption); the rest fall
-// back to her IG profile so a tap always lands somewhere real (never a wrong post).
-// → ohm: to wire more exact posts, set `link` to the /p/<shortcode>/ url per piece.
+// each artwork links to its exact instagram post — matched against her @lacuna.3 grid
+// by perceptual-hash over every carousel slide of each post (not just the cover), then
+// visually spot-checked. 17/18 wired to their exact post. green-niche has no IG post,
+// so it falls back to her profile so a tap always lands somewhere real (never a WRONG post).
 const IG = "https://www.instagram.com/lacuna.3/";
-export const gallery: { src: string; alt: string; portrait: boolean; link: string }[] = [
-  { src: "/lacuna/blue-portrait.jpg", alt: "lacuna portrait", portrait: true, link: "https://www.instagram.com/lacuna.3/p/DVQxd_5kfjv/" },
-  { src: "/lacuna/sharmeeli.jpg", alt: "sharmeeli", portrait: false, link: IG },
-  { src: "/lacuna/dragon.jpg", alt: "evil eye dragon", portrait: true, link: "https://www.instagram.com/lacuna.3/p/DWHXbB9k_3f/" },
-  { src: "/lacuna/faces-box.jpg", alt: "faces in a box", portrait: false, link: IG },
-  { src: "/lacuna/eye-niche.jpg", alt: "eye niche", portrait: true, link: IG },
-  { src: "/lacuna/queen-clubs.jpg", alt: "queen of clubs", portrait: true, link: IG },
-  { src: "/lacuna/green-niche.jpg", alt: "green niche", portrait: false, link: IG },
-  { src: "/lacuna/centipede.jpg", alt: "centipede", portrait: true, link: IG },
-  { src: "/lacuna/scream.jpg", alt: "scream", portrait: true, link: IG },
-  { src: "/lacuna/blue-botanical.jpg", alt: "blue botanical", portrait: true, link: IG },
-  { src: "/lacuna/yellow-eye.jpg", alt: "yellow eye", portrait: true, link: IG },
-  { src: "/lacuna/bed-water.jpg", alt: "bed of water", portrait: true, link: IG },
-  { src: "/lacuna/passionflower.jpg", alt: "passionflower", portrait: true, link: IG },
-  { src: "/lacuna/eyes-face.jpg", alt: "eyes on a face", portrait: true, link: IG },
-  { src: "/lacuna/blue-muse.jpg", alt: "blue muse", portrait: true, link: IG },
-  { src: "/lacuna/photo-flowers.jpg", alt: "photo with flowers", portrait: true, link: IG },
-  { src: "/lacuna/green-pins.jpg", alt: "green pins", portrait: true, link: IG },
-  { src: "/lacuna/eye-petals.jpg", alt: "eye petals", portrait: true, link: IG },
+const post = (sc: string) => `https://www.instagram.com/lacuna.3/p/${sc}/`;
+export const gallery: { src: string; portrait: boolean; link: string }[] = [
+  { src: "/lacuna/blue-portrait.jpg", portrait: true, link: post("DVQxd_5kfjv") },
+  { src: "/lacuna/sharmeeli.jpg", portrait: false, link: post("DPYn3xqEUH0") },
+  { src: "/lacuna/dragon.jpg", portrait: true, link: post("DWHXbB9k_3f") },
+  { src: "/lacuna/faces-box.jpg", portrait: false, link: post("DSaW1qGk-66") },
+  { src: "/lacuna/eye-niche.jpg", portrait: true, link: post("DQ9rN70E8PW") },
+  { src: "/lacuna/queen-clubs.jpg", portrait: true, link: post("DTGFp9WEz8B") },
+  { src: "/lacuna/green-niche.jpg", portrait: false, link: IG },
+  { src: "/lacuna/centipede.jpg", portrait: true, link: post("DVLyJQ1Ed4f") },
+  { src: "/lacuna/scream.jpg", portrait: true, link: post("DPl6oEQESH3") },
+  { src: "/lacuna/blue-botanical.jpg", portrait: true, link: post("DRHyZwMk6-o") },
+  { src: "/lacuna/yellow-eye.jpg", portrait: true, link: post("DSDUWhzE5eh") },
+  { src: "/lacuna/bed-water.jpg", portrait: true, link: post("DTDBgi0kbK9") },
+  { src: "/lacuna/passionflower.jpg", portrait: true, link: post("DRCbx_UkYko") },
+  { src: "/lacuna/eyes-face.jpg", portrait: true, link: post("DTAca0-EaPg") },
+  { src: "/lacuna/blue-muse.jpg", portrait: true, link: post("DZyAfFGk0U1") },
+  { src: "/lacuna/photo-flowers.jpg", portrait: true, link: post("DZPA4pDEUQR") },
+  { src: "/lacuna/green-pins.jpg", portrait: true, link: post("DYNdfcOk_j0") },
+  { src: "/lacuna/eye-petals.jpg", portrait: true, link: post("DYVC1ebkxbi") },
 ];

@@ -106,10 +106,6 @@ export const Lacuna = ({ theme, onToggleTheme }: Props) => {
         .lac-frame { display: block; padding: 10px; background: var(--surface-raised); border: 1px solid var(--border-vis); border-radius: 2px; box-shadow: 0 1px 0 rgba(60,40,20,.04); transition: box-shadow .5s ease, transform .5s ease; }
         .lac-frame img { display: block; width: 100%; height: auto; }
         .lac-frame:hover { transform: translateY(-3px); box-shadow: 0 22px 54px -24px rgba(0,0,0,.5); }
-        .lac-cap { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; }
-        .lac-cap .t { font-family: var(--font-data); font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: var(--text-disabled); }
-        .lac-cap .v { font-family: var(--font-data); font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: var(--gold); opacity: 0; transition: opacity .25s; }
-        .lac-frame:hover + .lac-cap .v, .lac-item:hover .lac-cap .v { opacity: 1; }
         .lac-foot { margin-top: auto; padding-top: clamp(48px, 8vw, 88px); display: flex; flex-direction: column; align-items: center; gap: 18px; }
         .lac-foot-row { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 16px; flex-wrap: wrap; }
         .tg { font-family: var(--font-data); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-disabled); background: none; border: 0; cursor: pointer; transition: color .15s; }
@@ -156,13 +152,9 @@ export const Lacuna = ({ theme, onToggleTheme }: Props) => {
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.8, ease: "easeOut", delay: Math.min((i % 4) * 0.1, 0.3) }}
           >
-            <a className="lac-frame" href={art.link} target="_blank" rel="noopener noreferrer" aria-label={`${art.alt} — view on instagram`}>
-              <img src={art.src} alt={art.alt} loading="lazy" />
+            <a className="lac-frame" href={art.link} target="_blank" rel="noopener noreferrer" aria-label="view on instagram">
+              <img src={art.src} alt="" loading="lazy" />
             </a>
-            <figcaption className="lac-cap">
-              <span className="t">{art.alt}</span>
-              <span className="v">instagram ↗</span>
-            </figcaption>
           </motion.figure>
         ))}
       </div>
