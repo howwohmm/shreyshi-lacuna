@@ -7,19 +7,13 @@
 set -eo pipefail
 cd "$(dirname "$0")"
 
-# ╔══════════════════════════════════════════════════════════════╗
-# ║  OHM — ONE-TIME SETUP (2 min). do this BEFORE sending to her. ║
-# ║  this makes it truly one-tap for shreyshi (zero prompts).     ║
-# ║                                                              ║
-# ║  1. open  https://vercel.com/account/tokens  (logged in as   ║
-# ║     the account that owns shreyshithapliyal.vercel.app)      ║
-# ║  2. "Create Token" → name it "shreyshi-deploy" → copy it     ║
-# ║  3. paste it between the quotes on the next line:            ║
+# It runs on HER Mac with HER vercel login — nobody else's credentials needed.
+# First run only: it pops a browser to log into vercel (her account, the one that
+# owns shreyshithapliyal) and asks her to pick that project once. After that, every
+# run is pure double-click. (Optional: if a vercel token is ever pasted below, it
+# skips even those first-run steps — but it works perfectly fine left empty.)
 VERCEL_TOKEN=""
 VERCEL_PROJECT="shreyshithapliyal"
-# ║  (leave VERCEL_TOKEN empty = it falls back to asking her to   ║
-# ║   log in once. fill it = she just double-clicks, nothing else)║
-# ╚══════════════════════════════════════════════════════════════╝
 
 GOLD='\033[38;5;179m'; ROSE='\033[38;5;211m'; DIM='\033[2m'; B='\033[1m'; R='\033[0m'
 say() { printf "${GOLD}%s${R}\n" "$1"; }
