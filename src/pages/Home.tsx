@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
-import { profile, work, links } from "../data";
+import { profile, work, currentWork, links, skills } from "../data";
 
 type Props = { theme: "light" | "dark"; onToggleTheme: () => void };
 
@@ -190,16 +190,36 @@ export const Home = ({ theme, onToggleTheme }: Props) => {
           </div>
         </div>
 
-        {/* currently */}
+        {/* current work — her live client work at bykins */}
         <div style={section()}>
-          <span style={label}>currently</span>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 20px" }}>
-            {["designing for a wide audience", "branding · design systems", "always making"].map((item) => (
-              <span key={item} style={{ fontFamily: "var(--font-ui)", fontSize: "15px", fontWeight: 300, color: "var(--text-primary)" }}>
-                {item}
-              </span>
+          <span style={label}>current work</span>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            {currentWork.map((c) => (
+              <a
+                key={c.title}
+                href={c.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="foot-link"
+                style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: "16px" }}
+              >
+                <span style={{ fontFamily: "var(--font-ui)", fontSize: "15px", fontWeight: 400, color: "var(--text-primary)" }}>
+                  {c.title}
+                </span>
+                <span style={{ fontFamily: "var(--font-data)", fontSize: "10px", letterSpacing: ".03em", textTransform: "uppercase", color: "var(--text-disabled)" }}>
+                  {c.meta} ↗
+                </span>
+              </a>
             ))}
           </div>
+        </div>
+
+        {/* what i can do */}
+        <div style={section()}>
+          <span style={label}>what i can do</span>
+          <p style={{ fontFamily: "var(--font-ui)", fontSize: "13px", fontWeight: 300, lineHeight: 1.6, color: "var(--text-secondary)", margin: 0 }}>
+            {skills}
+          </p>
         </div>
 
         {/* ethos quote + LACUNA cta */}
