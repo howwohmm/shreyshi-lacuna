@@ -70,6 +70,14 @@ export const Home = ({ theme, onToggleTheme }: Props) => {
     return () => clearInterval(id);
   }, []);
 
+  // close the bio with Escape (it can be opened from the keyboard via the footer button)
+  useEffect(() => {
+    if (!bioOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setBioOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [bioOpen]);
+
   const hasTrack = !!(np.title && np.artist);
 
   return (
@@ -105,7 +113,13 @@ export const Home = ({ theme, onToggleTheme }: Props) => {
             <span className="bio-name" onClick={() => setBioOpen(false)}>
               {profile.name}
             </span>
-            <span className="bio-back" onClick={() => setBioOpen(false)} role="button" tabIndex={0}>
+            <span
+              className="bio-back"
+              onClick={() => setBioOpen(false)}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setBioOpen(false); } }}
+              role="button"
+              tabIndex={0}
+            >
               ← close
             </span>
           </div>

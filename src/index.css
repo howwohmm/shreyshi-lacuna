@@ -16,7 +16,7 @@
   --text-display:   #2a1d12;
   --text-primary:   #2a1d12;
   --text-secondary: #5f4a30;
-  --text-disabled:  #8a6f4e;
+  --text-disabled:  #73592f;   /* darkened from #8a6f4e → clears WCAG AA on the small uppercase labels */
 
   /* her jewel accents (from the art) */
   --gold:        #b8860f;
@@ -111,7 +111,6 @@ a { color: inherit; text-decoration: none; }
 .lacuna-cta { padding: 0 24px; display: flex; flex-direction: column; justify-content: center; gap: 10px; cursor: pointer; transition: background .2s ease; }
 .lacuna-cta:hover { background: var(--surface); }
 .lacuna-cta-btn { align-self: flex-start; margin-top: 4px; font-family: var(--font-data); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-display); border: 1px solid var(--border-vis); border-radius: 999px; padding: 6px 14px; transition: border-color .2s ease, transform .2s ease, color .2s ease; }
-.lacuna-cta-btn { color: var(--text-display); }
 .lacuna-cta:hover .lacuna-cta-btn { border-color: var(--gold); color: var(--gold); transform: translateX(3px); }
 @media (max-width: 760px) {
   .hero-grid { grid-template-columns: 1fr; height: auto; min-height: 100svh; }
@@ -175,10 +174,9 @@ body.lacuna-page .cursor-flower { color: #f2acca; }
 .mg-rot { transform-box: fill-box; transform-origin: center center; animation: fm-rotate 38s linear infinite; }
 
 /* ── bio reveal panel (tap the name → opens, like ohm.quest) ── */
-.n-bio-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.88); z-index: 100; display: flex; align-items: center; justify-content: center; padding: var(--sp-2xl); animation: fadeIn .2s ease; }
-.n-bio-panel { background: #f5ece0; border: 1px solid rgba(74,50,28,.4); box-shadow: 0 24px 70px rgba(40,24,10,.45); padding: var(--sp-2xl); max-width: 520px; width: 100%; margin: auto; max-height: 86vh; overflow: hidden auto; color: #3b2a18; position: relative; }
-.n-bio-close { position: absolute; top: var(--sp-md); left: var(--sp-md); z-index: 2; margin: 0; padding: 5px 11px; border-radius: 999px; background: rgba(40,24,10,.45); backdrop-filter: blur(4px); color: #f5ece0; font-family: var(--font-data); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; transition: background .15s, color .15s; }
-.n-bio-close:hover { background: rgba(40,24,10,.72); color: #fff; }
+/* (the old modal bio overlay/panel/close rules were removed — the bio now reveals
+   in-pane via .bio-open in Home.tsx; .n-bio-photo/cyber/grain/heading/body below are
+   shared by that in-pane reveal.) */
 .n-bio-photo { position: relative; display: block; width: calc(100% + 2 * var(--sp-2xl)); margin: calc(-1 * var(--sp-2xl)) calc(-1 * var(--sp-2xl)) var(--sp-xl); height: 320px; overflow: hidden; border-color: rgba(74,50,28,.45); }
 .n-bio-photo-img { width: 100%; height: 100%; object-fit: cover; object-position: center 16%; display: block; filter: grayscale(1) contrast(1.18) brightness(1.04); }
 .n-bio-cyber { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; image-rendering: crisp-edges; opacity: .95; pointer-events: none; }
@@ -189,7 +187,6 @@ body.lacuna-page .cursor-flower { color: #f2acca; }
 .n-bio-body strong { color: #2e1f10; font-weight: 600; }
 .n-bio-body a { color: #2e1f10; text-decoration: underline; text-decoration-color: rgba(74,50,28,.5); text-underline-offset: 2px; transition: text-decoration-color .15s; }
 .n-bio-body a:hover { text-decoration-color: #2e1f10; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* ── in-pane bio reveal (opens INSIDE the left pane, like ohm.quest) ── */
 .bio-closed, .bio-open { position: absolute; inset: 0; transition: opacity .45s ease, transform .45s ease; }

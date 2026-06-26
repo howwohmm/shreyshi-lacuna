@@ -22,9 +22,24 @@ export const Lacuna = ({ theme, onToggleTheme }: Props) => {
   // longing: autoplay quietly via the YT IFrame API (volume ~35%), pausable.
   // browsers block autoplay-with-sound until a gesture, so we also try on first
   // deliberate click / scroll / key (NOT mousemove — music shouldn't lurch in).
+  const userPausedRef = useRef(false);
+
   useEffect(() => {
     const w = window as any;
     let cancelled = false;
+
+    // the gesture fallback only ever KICK-STARTS the first play. it must never
+    // override a deliberate pause, so it no-ops once the user has paused and the
+    // listeners are torn down the moment playback actually starts.
+    const tryPlay = () => {
+      if (userPausedRef.current) return;
+      try { playerRef.current?.playVideo?.(); } catch { /* noop */ }
+    };
+    const removeGestures = () => {
+      window.removeEventListener("click", tryPlay);
+      window.removeEventListener("scroll", tryPlay);
+      window.removeEventListener("keydown", tryPlay);
+    };
 
     const init = () => {
       if (cancelled || !w.YT?.Player) return;
@@ -36,7 +51,11 @@ export const Lacuna = ({ theme, onToggleTheme }: Props) => {
             e.target.setVolume(35);
             try { e.target.playVideo(); } catch { /* blocked until gesture */ }
           },
-          onStateChange: (e: any) => setPlaying(e.data === w.YT.PlayerState.PLAYING),
+          onStateChange: (e: any) => {
+            const isPlaying = e.data === w.YT.PlayerState.PLAYING;
+            setPlaying(isPlaying);
+            if (isPlaying) removeGestures(); // fallback's job is done
+          },
         },
       });
     };
@@ -53,16 +72,13 @@ export const Lacuna = ({ theme, onToggleTheme }: Props) => {
       }
     }
 
-    const tryPlay = () => { try { playerRef.current?.playVideo?.(); } catch { /* noop */ } };
     window.addEventListener("click", tryPlay, { once: true });
     window.addEventListener("scroll", tryPlay, { once: true, passive: true });
     window.addEventListener("keydown", tryPlay, { once: true });
 
     return () => {
       cancelled = true;
-      window.removeEventListener("click", tryPlay);
-      window.removeEventListener("scroll", tryPlay);
-      window.removeEventListener("keydown", tryPlay);
+      removeGestures();
       try { playerRef.current?.destroy?.(); } catch { /* noop */ }
     };
   }, []);
@@ -70,8 +86,8 @@ export const Lacuna = ({ theme, onToggleTheme }: Props) => {
   const toggle = () => {
     const p = playerRef.current;
     if (!p) return;
-    if (playing) p.pauseVideo();
-    else p.playVideo();
+    if (playing) { userPausedRef.current = true; p.pauseVideo(); }
+    else { userPausedRef.current = false; p.playVideo(); }
   };
 
   return (
