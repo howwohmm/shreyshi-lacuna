@@ -7,13 +7,27 @@
 set -eo pipefail
 cd "$(dirname "$0")"
 
+# ╔══════════════════════════════════════════════════════════════╗
+# ║  OHM — ONE-TIME SETUP (2 min). do this BEFORE sending to her. ║
+# ║  this makes it truly one-tap for shreyshi (zero prompts).     ║
+# ║                                                              ║
+# ║  1. open  https://vercel.com/account/tokens  (logged in as   ║
+# ║     the account that owns shreyshithapliyal.vercel.app)      ║
+# ║  2. "Create Token" → name it "shreyshi-deploy" → copy it     ║
+# ║  3. paste it between the quotes on the next line:            ║
+VERCEL_TOKEN=""
+VERCEL_PROJECT="shreyshithapliyal"
+# ║  (leave VERCEL_TOKEN empty = it falls back to asking her to   ║
+# ║   log in once. fill it = she just double-clicks, nothing else)║
+# ╚══════════════════════════════════════════════════════════════╝
+
 GOLD='\033[38;5;179m'; ROSE='\033[38;5;211m'; DIM='\033[2m'; B='\033[1m'; R='\033[0m'
 say() { printf "${GOLD}%s${R}\n" "$1"; }
 soft() { printf "${DIM}%s${R}\n" "$1"; }
 
 clear
 printf "${ROSE}${B}\n  🌼  lacuna — updating your website\n${R}\n"
-soft "  this takes a few minutes. just follow the prompts when asked."
+soft "  sit back, this takes a couple minutes and does everything itself."
 echo ""
 
 REPO="https://github.com/howwohmm/shreyshi-lacuna.git"
@@ -58,19 +72,28 @@ say "  ✓ built"
 echo ""
 
 # 4. deploy with vercel
-say "→ putting it live. a browser may open to log you into vercel — that's normal."
-soft "   when it asks 'Link to existing project?' say YES and pick:  shreyshithapliyal"
-soft "   (picking your EXISTING project keeps your web address + spotify working.)"
-echo ""
-npx --yes vercel@latest link
-echo ""
-say "→ deploying to production…"
-npx --yes vercel@latest --prod
+if [ -n "$VERCEL_TOKEN" ]; then
+  # ── fully automatic: token baked in by ohm, no prompts for her ──
+  say "→ putting your site live… (no clicks needed, ~1 min)"
+  npx --yes vercel@latest link --yes --project "$VERCEL_PROJECT" --token "$VERCEL_TOKEN" >/dev/null 2>&1 \
+    || die "couldn't connect to vercel (the access key may be wrong or expired — tell ohm)."
+  npx --yes vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN" 2>&1 | tail -4 \
+    || die "the deploy didn't finish."
+else
+  # ── fallback (ohm didn't bake a token): one-time vercel login + link ──
+  say "→ putting it live. a browser may open to log into vercel — that's normal."
+  soft "   if it asks 'Link to existing project?' say YES and pick:  shreyshithapliyal"
+  echo ""
+  npx --yes vercel@latest link
+  echo ""
+  say "→ deploying to production…"
+  npx --yes vercel@latest --prod
+fi
 
 echo ""
 printf "${ROSE}${B}  ✓ done! your site is live at https://shreyshithapliyal.vercel.app  🌼${R}\n\n"
-soft "  (if the music/now-playing looks empty, it's because this was a NEW vercel"
-soft "   project — ask ohm to copy the 3 SPOTIFY_ env vars from your old project.)"
+soft "  (if now-playing looks empty, it deployed to a NEW project — tell ohm to"
+soft "   copy the 3 SPOTIFY_ env vars over.)"
 echo ""
 open "https://shreyshithapliyal.vercel.app" || true
 printf "${B}press enter to close.${R}\n"; read _
