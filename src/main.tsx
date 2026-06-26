@@ -5,6 +5,7 @@ import { Home } from "./pages/Home";
 import { Lacuna } from "./pages/Lacuna";
 import { CursorFlower } from "./components/CursorFlower";
 import { LoadingScreen } from "./components/LoadingScreen";
+import { DesktopGate } from "./components/DesktopGate";
 import "./index.css";
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
+      <DesktopGate />
       <LoadingScreen />
       <div className="mesh-bg" />
       <CursorFlower />
