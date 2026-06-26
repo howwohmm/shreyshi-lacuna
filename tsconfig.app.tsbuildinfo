@@ -1,1 +1,1 @@
-{"root":["./src/data.ts","./src/main.tsx","./src/components/bioreveal.tsx","./src/components/cursorflower.tsx","./src/components/footmark.tsx","./src/pages/home.tsx","./src/pages/lacuna.tsx"],"version":"5.9.3"}
+{"root":["./src/data.ts","./src/main.tsx","./src/components/bioreveal.tsx","./src/components/cursorflower.tsx","./src/components/footmark.tsx","./src/components/loadingscreen.tsx","./src/pages/home.tsx","./src/pages/lacuna.tsx"],"version":"5.9.3"}

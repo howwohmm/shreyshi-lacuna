@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { Lacuna } from "./pages/Lacuna";
 import { CursorFlower } from "./components/CursorFlower";
+import { LoadingScreen } from "./components/LoadingScreen";
 import "./index.css";
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
+      <LoadingScreen />
       <div className="mesh-bg" />
       <CursorFlower />
       <Routes>

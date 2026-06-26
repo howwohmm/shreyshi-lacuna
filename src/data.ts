@@ -67,24 +67,28 @@ export const lacunaMeta = {
   song: "longing",
 };
 
-// portrait-ish & landscape flagged so the gallery can vary the masonry rhythm
-export const gallery: { src: string; alt: string; portrait: boolean }[] = [
-  { src: "/lacuna/blue-portrait.jpg", alt: "lacuna portrait", portrait: true },
-  { src: "/lacuna/sharmeeli.jpg", alt: "sharmeeli", portrait: false },
-  { src: "/lacuna/dragon.jpg", alt: "dragon", portrait: true },
-  { src: "/lacuna/faces-box.jpg", alt: "faces in a box", portrait: false },
-  { src: "/lacuna/eye-niche.jpg", alt: "eye niche", portrait: true },
-  { src: "/lacuna/queen-clubs.jpg", alt: "queen of clubs", portrait: true },
-  { src: "/lacuna/green-niche.jpg", alt: "green niche", portrait: false },
-  { src: "/lacuna/centipede.jpg", alt: "centipede", portrait: true },
-  { src: "/lacuna/scream.jpg", alt: "scream", portrait: true },
-  { src: "/lacuna/blue-botanical.jpg", alt: "blue botanical", portrait: true },
-  { src: "/lacuna/yellow-eye.jpg", alt: "yellow eye", portrait: true },
-  { src: "/lacuna/bed-water.jpg", alt: "bed of water", portrait: true },
-  { src: "/lacuna/passionflower.jpg", alt: "passionflower", portrait: true },
-  { src: "/lacuna/eyes-face.jpg", alt: "eyes on a face", portrait: true },
-  { src: "/lacuna/blue-muse.jpg", alt: "blue muse", portrait: true },
-  { src: "/lacuna/photo-flowers.jpg", alt: "photo with flowers", portrait: true },
-  { src: "/lacuna/green-pins.jpg", alt: "green pins", portrait: true },
-  { src: "/lacuna/eye-petals.jpg", alt: "eye petals", portrait: true },
+// each artwork links to its instagram post. only 2 are confidently matched to an
+// exact post (blue-portrait + dragon, verified by image + caption); the rest fall
+// back to her IG profile so a tap always lands somewhere real (never a wrong post).
+// → ohm: to wire more exact posts, set `link` to the /p/<shortcode>/ url per piece.
+const IG = "https://www.instagram.com/lacuna.3/";
+export const gallery: { src: string; alt: string; portrait: boolean; link: string }[] = [
+  { src: "/lacuna/blue-portrait.jpg", alt: "lacuna portrait", portrait: true, link: "https://www.instagram.com/lacuna.3/p/DVQxd_5kfjv/" },
+  { src: "/lacuna/sharmeeli.jpg", alt: "sharmeeli", portrait: false, link: IG },
+  { src: "/lacuna/dragon.jpg", alt: "evil eye dragon", portrait: true, link: "https://www.instagram.com/lacuna.3/p/DWHXbB9k_3f/" },
+  { src: "/lacuna/faces-box.jpg", alt: "faces in a box", portrait: false, link: IG },
+  { src: "/lacuna/eye-niche.jpg", alt: "eye niche", portrait: true, link: IG },
+  { src: "/lacuna/queen-clubs.jpg", alt: "queen of clubs", portrait: true, link: IG },
+  { src: "/lacuna/green-niche.jpg", alt: "green niche", portrait: false, link: IG },
+  { src: "/lacuna/centipede.jpg", alt: "centipede", portrait: true, link: IG },
+  { src: "/lacuna/scream.jpg", alt: "scream", portrait: true, link: IG },
+  { src: "/lacuna/blue-botanical.jpg", alt: "blue botanical", portrait: true, link: IG },
+  { src: "/lacuna/yellow-eye.jpg", alt: "yellow eye", portrait: true, link: IG },
+  { src: "/lacuna/bed-water.jpg", alt: "bed of water", portrait: true, link: IG },
+  { src: "/lacuna/passionflower.jpg", alt: "passionflower", portrait: true, link: IG },
+  { src: "/lacuna/eyes-face.jpg", alt: "eyes on a face", portrait: true, link: IG },
+  { src: "/lacuna/blue-muse.jpg", alt: "blue muse", portrait: true, link: IG },
+  { src: "/lacuna/photo-flowers.jpg", alt: "photo with flowers", portrait: true, link: IG },
+  { src: "/lacuna/green-pins.jpg", alt: "green pins", portrait: true, link: IG },
+  { src: "/lacuna/eye-petals.jpg", alt: "eye petals", portrait: true, link: IG },
 ];

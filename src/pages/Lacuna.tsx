@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { gallery, lacunaMeta, profile } from "../data";
@@ -6,17 +6,73 @@ import { Footmark } from "../components/Footmark";
 
 type Props = { theme: "light" | "dark"; onToggleTheme: () => void };
 
-// "longing" — streamed from youtube, the same track on her live site (looped, audio only)
+// "longing" — her track, streamed from youtube (same as her original site)
 const SONG_ID = "bRcMvvAulfw";
 
 export const Lacuna = ({ theme, onToggleTheme }: Props) => {
   const [playing, setPlaying] = useState(false);
+  const playerRef = useRef<any>(null);
 
-  // the lacuna route swaps the cursor daisy → pink pointed bloom (her cf-lacuna)
+  // the lacuna route swaps the cursor daisy → pink pointed bloom
   useEffect(() => {
     document.body.classList.add("lacuna-page");
     return () => document.body.classList.remove("lacuna-page");
   }, []);
+
+  // longing: autoplay quietly via the YT IFrame API (volume ~35%), pausable.
+  // browsers block autoplay-with-sound until a gesture, so we also try on first
+  // deliberate click / scroll / key (NOT mousemove — music shouldn't lurch in).
+  useEffect(() => {
+    const w = window as any;
+    let cancelled = false;
+
+    const init = () => {
+      if (cancelled || !w.YT?.Player) return;
+      playerRef.current = new w.YT.Player("longing-player", {
+        videoId: SONG_ID,
+        playerVars: { autoplay: 1, loop: 1, playlist: SONG_ID, controls: 0, playsinline: 1 },
+        events: {
+          onReady: (e: any) => {
+            e.target.setVolume(35);
+            try { e.target.playVideo(); } catch { /* blocked until gesture */ }
+          },
+          onStateChange: (e: any) => setPlaying(e.data === w.YT.PlayerState.PLAYING),
+        },
+      });
+    };
+
+    if (w.YT?.Player) init();
+    else {
+      const prev = w.onYouTubeIframeAPIReady;
+      w.onYouTubeIframeAPIReady = () => { prev?.(); init(); };
+      if (!document.getElementById("yt-iframe-api")) {
+        const tag = document.createElement("script");
+        tag.id = "yt-iframe-api";
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.body.appendChild(tag);
+      }
+    }
+
+    const tryPlay = () => { try { playerRef.current?.playVideo?.(); } catch { /* noop */ } };
+    window.addEventListener("click", tryPlay, { once: true });
+    window.addEventListener("scroll", tryPlay, { once: true, passive: true });
+    window.addEventListener("keydown", tryPlay, { once: true });
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener("click", tryPlay);
+      window.removeEventListener("scroll", tryPlay);
+      window.removeEventListener("keydown", tryPlay);
+      try { playerRef.current?.destroy?.(); } catch { /* noop */ }
+    };
+  }, []);
+
+  const toggle = () => {
+    const p = playerRef.current;
+    if (!p) return;
+    if (playing) p.pauseVideo();
+    else p.playVideo();
+  };
 
   return (
     <div className="lac">
@@ -31,25 +87,24 @@ export const Lacuna = ({ theme, onToggleTheme }: Props) => {
         @media (max-width: 1099px) { .lac-masonry { column-count: 2; } }
         @media (max-width: 619px)  { .lac-masonry { column-count: 1; } }
         .lac-item { break-inside: avoid; margin: 0 0 clamp(14px, 2.4vw, 26px); }
-        .lac-frame { padding: 10px; background: var(--surface-raised); border: 1px solid var(--border-vis); border-radius: 2px; box-shadow: 0 1px 0 rgba(60,40,20,.04); transition: box-shadow .5s ease, transform .5s ease; }
+        .lac-frame { display: block; padding: 10px; background: var(--surface-raised); border: 1px solid var(--border-vis); border-radius: 2px; box-shadow: 0 1px 0 rgba(60,40,20,.04); transition: box-shadow .5s ease, transform .5s ease; }
         .lac-frame img { display: block; width: 100%; height: auto; }
-        .lac-frame:hover { transform: translateY(-3px); box-shadow: 0 20px 50px -24px rgba(60,40,20,.5); }
+        .lac-frame:hover { transform: translateY(-3px); box-shadow: 0 22px 54px -24px rgba(0,0,0,.5); }
+        .lac-cap { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; }
+        .lac-cap .t { font-family: var(--font-data); font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: var(--text-disabled); }
+        .lac-cap .v { font-family: var(--font-data); font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: var(--gold); opacity: 0; transition: opacity .25s; }
+        .lac-frame:hover + .lac-cap .v, .lac-item:hover .lac-cap .v { opacity: 1; }
         .lac-foot { margin-top: auto; padding-top: clamp(48px, 8vw, 88px); display: flex; flex-direction: column; align-items: center; gap: 18px; }
         .lac-foot-row { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 16px; flex-wrap: wrap; }
-        .tg { font-family: var(--font-data); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-disabled); background: none; border: 0; cursor: pointer; transition: color .15s; }
+        .tg { font-family: var(--font-data); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-disabled); background: none; border: 0; cursor: pointer; transition: color .15s; }
         .tg:hover { color: var(--text-primary); }
         @media (max-width: 760px) { .lac-hero { max-width: none; } }
       `}</style>
 
-      {/* hidden youtube player — "longing", looped */}
-      {playing && (
-        <iframe
-          title="longing"
-          src={`https://www.youtube.com/embed/${SONG_ID}?autoplay=1&loop=1&playlist=${SONG_ID}&controls=0&playsinline=1`}
-          allow="autoplay"
-          style={{ position: "absolute", width: 1, height: 1, left: -9999, top: -9999, border: 0, opacity: 0, pointerEvents: "none" }}
-        />
-      )}
+      {/* hidden youtube player (YT IFrame API replaces this div) */}
+      <div style={{ position: "absolute", width: 1, height: 1, left: -9999, top: -9999, overflow: "hidden" }}>
+        <div id="longing-player" />
+      </div>
 
       {/* header */}
       <header className="lac-hd">
@@ -65,21 +120,16 @@ export const Lacuna = ({ theme, onToggleTheme }: Props) => {
       </header>
 
       {/* hero */}
-      <motion.section
-        className="lac-hero"
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, ease: "easeOut" }}
-      >
+      <motion.section className="lac-hero" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: "easeOut" }}>
         <span className="lac-kicker">{lacunaMeta.definition}</span>
         <h1 className="lac-title">{lacunaMeta.heading}</h1>
         <p className="lac-line">{lacunaMeta.line}</p>
-        <button className="lac-song-btn" style={{ marginTop: 24 }} onClick={() => setPlaying((p) => !p)} aria-pressed={playing}>
-          <span>{playing ? "❚❚" : "▶"}</span> {lacunaMeta.song}
+        <button className="lac-song-btn" style={{ marginTop: 24 }} onClick={toggle} aria-pressed={playing}>
+          <span>{playing ? "❚❚ pause" : "▶ play"}</span> {lacunaMeta.song}
         </button>
       </motion.section>
 
-      {/* gallery */}
+      {/* gallery — each piece links to its instagram post */}
       <div className="lac-masonry">
         {gallery.map((art, i) => (
           <motion.figure
@@ -90,9 +140,13 @@ export const Lacuna = ({ theme, onToggleTheme }: Props) => {
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.8, ease: "easeOut", delay: Math.min((i % 4) * 0.1, 0.3) }}
           >
-            <div className="lac-frame">
+            <a className="lac-frame" href={art.link} target="_blank" rel="noopener noreferrer" aria-label={`${art.alt} — view on instagram`}>
               <img src={art.src} alt={art.alt} loading="lazy" />
-            </div>
+            </a>
+            <figcaption className="lac-cap">
+              <span className="t">{art.alt}</span>
+              <span className="v">instagram ↗</span>
+            </figcaption>
           </motion.figure>
         ))}
       </div>
